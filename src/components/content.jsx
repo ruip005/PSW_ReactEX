@@ -26,16 +26,24 @@ const Content = () => {
         return randomNumbers;
     };
 
-    const submitForm = (e, hero) => {
-        e.preventDefault();
-        setListOfHeroes(...listOfHeroes, {
-            id: listOfHeroes[listOfHeroes.length - 1].id + 1,
-            name: hero.nome,
-            image: hero.imagem,
-            power: hero.super_poder
+    const submitForm = (formData) => {
+        setListOfHeroes((currentHeroes) => {
+          const newHeroesList = [
+            ...currentHeroes,
+            {
+              id: currentHeroes.length > 0 ? currentHeroes[currentHeroes.length - 1].id + 1 : 1,
+              image: formData.image,
+              name: formData.name,
+              super_power: formData.super_power,
+            },
+          ];
+          //submitFormapi(newHeroesList);
+      
+          console.log('Updated List of Heroes:', newHeroesList);
+      
+          return newHeroesList;
         });
-        redirect('/dashboard');
-    }
+      };
 
     // Este hook useEffect é usado para definir os heróis favoritos iniciais quando o componente é montado.
     // Ele roda apenas uma vez, graças ao array vazio de dependências [] como segundo argumento.
@@ -68,7 +76,7 @@ const Content = () => {
                     </>
                 )} />
                 <Route path="/dashboard" element={<Dashboard></Dashboard>} />
-                <Route path="/dashboard/add" element={<Form list_of_heroes ={listOfHeroes} submit={submitForm}></Form>} />
+                <Route path="/dashboard/add" element={<Form submit={submitForm}></Form>} />
                 <Route path="/dashboard/edit/:id" element={<Form list_of_heroes={listOfHeroes} submit={submitForm}></Form>} />
             </Routes>
         </div>
